@@ -1,0 +1,5 @@
+rootProject.name = 'impala'
+def modulePrefix = 'impala'
+include(":${modulePrefix}-global", ":${modulePrefix}-core")
+project(":${modulePrefix}-global").projectDir = new File(settingsDir, 'modules/global')
+project(":${modulePrefix}-core").projectDir = new File(settingsDir, 'modules/core')
