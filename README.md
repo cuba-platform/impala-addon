@@ -22,13 +22,13 @@ applications.
     
 3. Download Impala JDBC driver from the Cloudera https://www.cloudera.com/downloads/connectors/impala/jdbc/2-5-43.html.
 4. Copy driver JARs to the `tomcat/shared/lib` directory
-5. Configure datasource in the `context.xml` file, e.g.:
+5. Configure datasource in the `context.xml` file, for example:
 ```
 <Resource driverClassName="com.cloudera.impala.jdbc41.Driver"
               maxIdle="2"
               maxTotal="20"
               maxWaitMillis="5000"
-              name="jdbc/ORDERS"
+              name="jdbc/{store_name}"
               type="javax.sql.DataSource"
               url="jdbc:impala://192.168.66.11:21050/impala_kudu"
               validationQuery="SELECT 1"
@@ -37,6 +37,39 @@ applications.
 ```              
 
 ## Usage
+- JPA entities should extends `BaseGenericIdEntity` class. 
+- JPA entities should have specified `@Id` property.
+For example: 
+```
+@NamePattern("%s|productName")
+@Table(name = "PRODUCTS")
+@Entity(name = "impala$Product")
+public class Product extends BaseGenericIdEntity<Integer> {
+    private static final long serialVersionUID = -9203546219749413634L;
+
+    @Id
+    @Column(name = "PRODUCT_ID")
+    protected Integer id;
+
+    @Column(name = "PRODUCT_NAME")
+    protected String productName;
+
+    @Column(name = "PRODUCT_PRICE")
+    protected Double productPrice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PRODUCT_TYPE_ID")
+    protected ProductType productType;
+
+    @Column(name = "DATE")
+    protected Date date;
+}
+```
+## Limitations 
+- Create/Update operations are supported only for KUDU tables. 
+- JPA entities with optimistic locking (have @Version field) doesn't work
+- IN and NOT IN conditions in the filter don't work for String type. JDBC driver escapes some chars e.g. `.` and search doesn't work.
+- List of the supported database types: https://kudu.apache.org/docs/schema_design.html. CLOB/LOB database types aren't supported.
 
 ## Forums
 * [Cuba Platform](https://www.cuba-platform.com/support/)
