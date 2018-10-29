@@ -16,9 +16,14 @@ The add-on provides an ability to use Impala as additional datastore in CUBA-bas
 
     `com.haulmont.addon.impala:impala-global:1.0-SNAPSHOT`
   
-2. Configure additional Impala datastore as described in the [documentation](https://doc.cuba-platform.com/manual-6.10/data_store.html):
-    - Additionally set `cuba.dbmsType_{store_name} = impala`
-    - Additionally set `cuba.disableEscapingLikeForDataStores={store_name}`. The property should be specified in the property files of all used application blocks (`app.properties`, `web-app.properties`, `portal-app.properties`, etc.)  
+2. Add a custom [data store](https://doc.cuba-platform.com/manual-6.10/data_store.html) using Studio. In the _Data store_ dialog, enter some name, e.g. "myImpala", select _Custom_ and leave the _Bean name_ field empty. Save the project properties and go to the IDE. Configure additional properties:
+    - In `app.properties`:
+    
+        `cuba.storeImpl_myImpala = impala`
+        
+    - In both `app.properties` and `web-app.properties`:
+    
+        `cuba.disableEscapingLikeForDataStores = myImpala`
     
 3. Download Impala JDBC driver from [Cloudera](https://www.cloudera.com/downloads/connectors/impala/jdbc/2-5-43.html).
 4. Copy driver JARs to the `tomcat/shared/lib` directory
@@ -37,6 +42,7 @@ The add-on provides an ability to use Impala as additional datastore in CUBA-bas
 ```              
 
 ## Usage
+
 - Entities should extends `BaseGenericIdEntity` class. 
 - Entities should have specified `@Id` property.
 For example: 
@@ -65,7 +71,9 @@ public class Product extends BaseGenericIdEntity<Integer> {
     protected Date date;
 }
 ```
+
 ## Limitations 
+
 - Create/Update operations are supported only for Kudu tables. 
 - Optimistic locking (via @Version field) doesn't work.
 - In generic filter, IN and NOT IN conditions don't work for String type. JDBC driver escapes some chars e.g. `.` and search doesn't work.
