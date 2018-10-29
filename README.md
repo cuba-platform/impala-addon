@@ -16,24 +16,24 @@ The add-on provides an ability to use Impala as additional datastore in CUBA-bas
 
     `com.haulmont.addon.impala:impala-global:1.0-SNAPSHOT`
   
-2. Add a custom [data store](https://doc.cuba-platform.com/manual-6.10/data_store.html) using Studio. In the _Data store_ dialog, enter some name, e.g. "myImpala", select _Custom_ and leave the _Bean name_ field empty. Save the project properties and go to the IDE. Configure additional properties:
-    - In `app.properties`:
+2. Add a custom [data store](https://doc.cuba-platform.com/manual-6.10/data_store.html) using Studio. In the _Data store_ dialog, enter some name, e.g. "myImpala", select _RdbmsStore_ and leave _Database type_ as is (it will be changed manually, see below). Save the project properties and go to the IDE. Configure additional properties:
+    - In `app.properties`, change the DBMS type to `impala`:
     
         `cuba.dbmsType_myImpala = impala`
         
-    - In both `app.properties` and `web-app.properties`:
+    - Add in both `app.properties` and `web-app.properties`:
     
         `cuba.disableEscapingLikeForDataStores = myImpala`
     
 3. Download Impala JDBC driver from [Cloudera](https://www.cloudera.com/downloads/connectors/impala/jdbc/2-5-43.html).
 4. Copy driver JARs to the `tomcat/shared/lib` directory
-5. Configure datasource in the `context.xml` file, for example:
+5. Edit datasource configuration in the `context.xml` file, for example:
 ```
 <Resource driverClassName="com.cloudera.impala.jdbc41.Driver"
               maxIdle="2"
               maxTotal="20"
               maxWaitMillis="5000"
-              name="jdbc/{store_name}"
+              name="jdbc/myImpala"
               type="javax.sql.DataSource"
               url="jdbc:impala://192.168.66.11:21050/impala_kudu"
               validationQuery="SELECT 1"
