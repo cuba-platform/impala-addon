@@ -1,8 +1,8 @@
 # CUBA Impala Add-on
+
 ## Overview
 
-The add-on adds an ability to use Impala as additional datastore in the CUBA-based
-applications.
+The add-on provides an ability to use Impala as additional datastore in CUBA-based applications.
 
 ## Compatibility with platform versions
 
@@ -16,11 +16,11 @@ applications.
 
     `com.haulmont.addon.impala:impala-global:1.0-SNAPSHOT`
   
-2. Configure additional Impala datastore using https://doc.cuba-platform.com/manual-6.10/data_store.html:
+2. Configure additional Impala datastore as described in the [documentation](https://doc.cuba-platform.com/manual-6.10/data_store.html):
     - Additionally set `cuba.dbmsType_{store_name} = impala`
-    - Additionally set `cuba.disableEscapingLikeForDataStores={store_name}`. Property should be specified in the property files of all used application        blocks (`app.properties`, `web-app.properties`, `portal-app.properties`, etc.)  
+    - Additionally set `cuba.disableEscapingLikeForDataStores={store_name}`. The property should be specified in the property files of all used application blocks (`app.properties`, `web-app.properties`, `portal-app.properties`, etc.)  
     
-3. Download Impala JDBC driver from the Cloudera https://www.cloudera.com/downloads/connectors/impala/jdbc/2-5-43.html.
+3. Download Impala JDBC driver from [Cloudera](https://www.cloudera.com/downloads/connectors/impala/jdbc/2-5-43.html).
 4. Copy driver JARs to the `tomcat/shared/lib` directory
 5. Configure datasource in the `context.xml` file, for example:
 ```
@@ -37,8 +37,8 @@ applications.
 ```              
 
 ## Usage
-- JPA entities should extends `BaseGenericIdEntity` class. 
-- JPA entities should have specified `@Id` property.
+- Entities should extends `BaseGenericIdEntity` class. 
+- Entities should have specified `@Id` property.
 For example: 
 ```
 @NamePattern("%s|productName")
@@ -66,10 +66,7 @@ public class Product extends BaseGenericIdEntity<Integer> {
 }
 ```
 ## Limitations 
-- Create/Update operations are supported only for KUDU tables. 
-- JPA entities with optimistic locking (have @Version field) doesn't work
-- IN and NOT IN conditions in the filter don't work for String type. JDBC driver escapes some chars e.g. `.` and search doesn't work.
+- Create/Update operations are supported only for Kudu tables. 
+- Optimistic locking (via @Version field) doesn't work.
+- In generic filter, IN and NOT IN conditions don't work for String type. JDBC driver escapes some chars e.g. `.` and search doesn't work.
 - List of the supported database types: https://kudu.apache.org/docs/schema_design.html. CLOB/LOB database types aren't supported.
-
-## Forums
-* [Cuba Platform](https://www.cuba-platform.com/support/)
