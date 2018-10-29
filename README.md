@@ -19,7 +19,7 @@ The add-on provides an ability to use Impala as additional datastore in CUBA-bas
 2. Add a custom [data store](https://doc.cuba-platform.com/manual-6.10/data_store.html) using Studio. In the _Data store_ dialog, enter some name, e.g. "myImpala", select _Custom_ and leave the _Bean name_ field empty. Save the project properties and go to the IDE. Configure additional properties:
     - In `app.properties`:
     
-        `cuba.storeImpl_myImpala = impala`
+        `cuba.dbmsType_myImpala = impala`
         
     - In both `app.properties` and `web-app.properties`:
     
