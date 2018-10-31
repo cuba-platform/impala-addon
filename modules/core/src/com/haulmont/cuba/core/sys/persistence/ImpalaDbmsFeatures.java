@@ -60,7 +60,7 @@ public class ImpalaDbmsFeatures implements DbmsFeatures {
     }
 
     @Override
-    public boolean isEmulatesEqualsAsLike() {
+    public boolean emulateEqualsByLike() {
         return true;
     }
 
