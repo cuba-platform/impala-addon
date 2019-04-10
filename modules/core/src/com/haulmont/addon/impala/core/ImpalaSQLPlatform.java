@@ -4,12 +4,17 @@ import org.eclipse.persistence.exceptions.ValidationException;
 import org.eclipse.persistence.internal.databaseaccess.DatabaseCall;
 import org.eclipse.persistence.internal.expressions.ExpressionSQLPrinter;
 import org.eclipse.persistence.internal.expressions.SQLSelectStatement;
+import org.eclipse.persistence.internal.sessions.AbstractSession;
 import org.eclipse.persistence.platform.database.DatabasePlatform;
 import org.eclipse.persistence.queries.ValueReadQuery;
 
 import java.io.Writer;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class ImpalaSQLPlatform extends DatabasePlatform {
+
+    protected static final int KUDU_MAX_STRING_LENGTH = 510;
 
     @Override
     protected void initializePlatformOperators() {
@@ -94,6 +99,19 @@ public class ImpalaSQLPlatform extends DatabasePlatform {
 
         call.setIgnoreFirstRowSetting(true);
         call.setIgnoreMaxResultsSetting(true);
+    }
+
+    @Override
+    public void setParameterValueInDatabaseCall(Object parameter, PreparedStatement statement, int index, AbstractSession session) throws SQLException {
+        if (parameter instanceof String) {
+            if (((String) parameter).length() >= KUDU_MAX_STRING_LENGTH) {
+                statement.setObject(index, parameter);
+            } else {
+                super.setParameterValueInDatabaseCall(parameter, statement, index, session);
+            }
+        } else {
+            super.setParameterValueInDatabaseCall(parameter, statement, index, session);
+        }
     }
 
     @Override
